@@ -1,6 +1,6 @@
 import styled from "styled-components";
-import { ReactComponent as SearchIcon } from "./images/search.svg";
-import { CARD_SIZE, device } from "./constants";
+import { ReactComponent as SearchIcon } from "components/Search/images/search.svg";
+import { CARD_SIZE, device } from "components/constants";
 
 export const App = {
   Root: styled.div`
@@ -18,10 +18,13 @@ export const App = {
     }
   `,
   ScrollContainer: styled.div`
-    overflow: auto;
-    padding: 0 15px 20px 12px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 0 15px 0 12px;
     margin-right: 11px;
     height: 100%;
+    display: flex;
+    flex-direction: column;
 
     &::-webkit-scrollbar {
       width: 5px;
@@ -73,6 +76,12 @@ export const App = {
     width: 1px;
     background-color: rgba(0, 0, 0, 0.16);
   `,
+  Message: styled.span`
+    display: flex;
+    flex-grow: 1;
+    justify-content: center;
+    align-items: center;
+  `,
 };
 
 export const Search = {
@@ -86,6 +95,7 @@ export const Search = {
     margin: 0 -10px;
     padding: 20px 10px;
     z-index: 1;
+    flex-shrink: 0;
 
     @media ${device.mobile} {
       position: relative;
@@ -105,29 +115,38 @@ export const Search = {
   `,
   Icon: styled(SearchIcon)`
     position: absolute;
-    left: 16px;
+    left: 26px;
     top: calc(20px + 12px);
+  `,
+};
+
+export const ItemsList = {
+  Root: styled.div`
+    position: relative;
+    flex-shrink: 0;
   `,
 };
 
 export const Item = {
   Root: styled.div<{ isSelected: boolean }>`
+    position: absolute;
     width: 100%;
     height: ${CARD_SIZE.height}px;
     border: 1px solid ${(props) => (props.isSelected ? "#4765ff" : "#fafafa")};
     display: flex;
     box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.12), 0px 2px 2px rgba(0, 0, 0, 0.24);
     border-radius: 3px;
-    position: relative;
-
-    & + & {
-      margin-top: 20px;
-    }
+    margin-bottom: ${CARD_SIZE.gap}px;
+  `,
+  ImgWrapper: styled.div`
+    height: ${CARD_SIZE.height}px;
+    width: ${CARD_SIZE.height}px;
+    background: rgba(0, 0, 0, 0.25);
+    flex-shrink: 0;
   `,
   Img: styled.img`
-    height: ${CARD_SIZE.height}px;
-    width: auto;
-    background: rgba(0, 0, 0, 0.25);
+    height: 100%;
+    width: 100%;
   `,
   Data: styled.div`
     width: 100%;
