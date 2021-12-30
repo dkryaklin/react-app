@@ -9,3 +9,9 @@ export interface ItemInterface {
   address: string;
   email: string;
 }
+
+export interface TextChunk {
+  text: string;
+  key?: string;
+  marked?: boolean;
+}

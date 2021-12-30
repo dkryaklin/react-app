@@ -1,33 +1,21 @@
 import { ItemInterface } from "components/types";
 import { Item } from 'components/components';
-import { CARD_SIZE, IMAGE_LOAD_DELAY_TIME } from "components/constants";
-import React, { useState, useEffect } from "react";
+import { CARD_SIZE } from "components/constants";
 import { useAppSelector, useAppDispatch } from 'store/hooks';
 import { actions } from 'store/searchSlice';
+import { useImageLoaded, getMarkedTextChunks } from 'components/helpers';
+import React from 'react';
 
 function getMarkedText(str: string, query: string) {
-  const lowerCaseStr = str.toLowerCase();
-  const lowerCaseQuery = query.toLowerCase();
+  const chunks = getMarkedTextChunks(str, query);
 
-  if (!lowerCaseQuery || !lowerCaseStr.includes(lowerCaseQuery)) {
-    return str;
-  }
-
-  const results: Array<string | React.ReactElement<any, any>> = [];
-  const chunks = lowerCaseStr.split(lowerCaseQuery);
-
-  let start = 0;
-  chunks.forEach((chunk: string, index: number) => {
-    results.push(str.substring(start, start + chunk.length));
-    start += chunk.length;
-
-    if (index !== chunks.length - 1) {
-      results.push(<mark key={`${chunk}${index}`}>{str.substring(start, start + query.length)}</mark>);
-      start += query.length;
+  return chunks.map((chunk: { text: string; key?: string; marked?: boolean }) => {
+    if (chunk.marked) {
+      return <mark key={chunk.key}>{chunk.text}</mark>;
     }
-  });
 
-  return results;
+    return chunk.text;
+  })
 };
 
 function ItemComponent({ item }: { item: ItemInterface }) {
@@ -41,17 +29,7 @@ function ItemComponent({ item }: { item: ItemInterface }) {
   const buttonLabel = isSelected ? 'SKIP SELECTION' : 'MARK AS SIUTABLE';
   const top = CARD_SIZE.heightWithGap * item.position;
 
-  const [loaded, setLoaded] = useState(false);
-
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      setLoaded(true);
-    }, IMAGE_LOAD_DELAY_TIME);
-
-    return (() => {
-      clearTimeout(timeout);
-    });
-  }, []);
+  const imageLoaded = useImageLoaded();
 
   function buttonClick() {
     if (isSelected) {
@@ -64,7 +42,7 @@ function ItemComponent({ item }: { item: ItemInterface }) {
   return (
     <Item.Root isSelected={isSelected} style={{ top: `${top}px` }}>
       <Item.ImgWrapper>
-        {loaded && <Item.Img src={item.avatar} alt={item.name} loading="lazy" srcSet={item.avatarSrcSet} />}
+        {imageLoaded && <Item.Img src={item.avatar} alt={item.name} loading="lazy" srcSet={item.avatarSrcSet} />}
       </Item.ImgWrapper>
       <Item.Data>
         <Item.Name>{getMarkedText(item.name, query)}</Item.Name>
