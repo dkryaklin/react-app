@@ -30,6 +30,7 @@ function fetchItems(fn) {
 
         return {
           ...item,
+          id: Date.now() + Math.round(Math.random() * 1000000000),
           position: index,
           avatar,
           avatarSrcSet: avatarSrcSet.join(", "),

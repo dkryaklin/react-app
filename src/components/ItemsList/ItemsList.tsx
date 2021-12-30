@@ -9,7 +9,7 @@ function ItemsListComponent({ items, itemsLength }: { items: ItemInterface[], it
   return (
     <ItemsList.Root style={{ height: `${listHeight}px` }}>
       {items.map((item) => (
-        <ItemComponent key={item.email} item={item} isSelected={false} />
+        <ItemComponent key={item.email} item={item} />
       ))}
     </ItemsList.Root>
   );

@@ -139,8 +139,8 @@ export const Item = {
     margin-bottom: ${CARD_SIZE.gap}px;
   `,
   ImgWrapper: styled.div`
-    height: ${CARD_SIZE.height}px;
-    width: ${CARD_SIZE.height}px;
+    height: ${CARD_SIZE.height - 2}px;
+    width: ${CARD_SIZE.height - 2}px;
     background: rgba(0, 0, 0, 0.25);
     flex-shrink: 0;
   `,

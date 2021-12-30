@@ -1,4 +1,5 @@
 export interface ItemInterface {
+  id: number;
   position: number;
   avatar: string;
   avatarSrcSet: string;

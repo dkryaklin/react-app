@@ -2,8 +2,15 @@ import { ItemInterface } from "components/types";
 import { Item } from 'components/components';
 import { CARD_SIZE } from "components/constants";
 import { useState, useEffect } from "react";
+import { useAppSelector, useAppDispatch } from 'store/hooks';
+import { selectItem, unselectItem } from 'store/selectedItemsSlice';
 
-function ItemComponent({ item, isSelected }: { item: ItemInterface, isSelected: boolean }) {
+function ItemComponent({ item }: { item: ItemInterface }) {
+  const selectedItems = useAppSelector((state) => state.selectedItems.value);
+  const dispatch = useAppDispatch();
+
+  const isSelected = selectedItems.includes(item.id);
+
   const buttonLabel = isSelected ? 'SKIP SELECTION' : 'MARK AS SIUTABLE';
   const top = CARD_SIZE.heightWithGap * item.position;
 
@@ -19,6 +26,14 @@ function ItemComponent({ item, isSelected }: { item: ItemInterface, isSelected: 
     });
   }, []);
 
+  function buttonClick() {
+    if (isSelected) {
+      dispatch(unselectItem(item.id));
+    } else {
+      dispatch(selectItem(item.id));
+    }
+  };
+
   return (
     <Item.Root isSelected={isSelected} style={{ top: `${top}px` }}>
       <Item.ImgWrapper>
@@ -30,7 +45,7 @@ function ItemComponent({ item, isSelected }: { item: ItemInterface, isSelected: 
         <Item.Address>{item.address}, {item.city}</Item.Address>
         <Item.Email>{item.email}</Item.Email>
         <Item.Splitter isSelected={isSelected} />
-        <Item.Button>{buttonLabel}</Item.Button>
+        <Item.Button onClick={buttonClick}>{buttonLabel}</Item.Button>
       </Item.Data>
     </Item.Root>);
 }

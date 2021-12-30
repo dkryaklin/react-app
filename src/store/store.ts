@@ -1,9 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
 import queryReducer from "store/querySlice";
+import selectedItemsReducer from "store/selectedItemsSlice";
 
 const store = configureStore({
   reducer: {
     query: queryReducer,
+    selectedItems: selectedItemsReducer,
   },
 });
 
