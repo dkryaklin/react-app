@@ -1,12 +1,39 @@
 import { ItemInterface } from "components/types";
 import { Item } from 'components/components';
 import { CARD_SIZE } from "components/constants";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useAppSelector, useAppDispatch } from 'store/hooks';
 import { selectItem, unselectItem } from 'store/selectedItemsSlice';
 
+function getMarkedText(str: string, query: string) {
+  const lowerCaseStr = str.toLowerCase();
+  const lowerCaseQuery = query.toLowerCase();
+
+  if (!lowerCaseQuery || !lowerCaseStr.includes(lowerCaseQuery)) {
+    return str;
+  }
+
+  const results: Array<string | React.ReactElement<any, any>> = [];
+  const chunks = lowerCaseStr.split(lowerCaseQuery);
+
+  let start = 0;
+  chunks.forEach((chunk: string, index: number) => {
+    results.push(str.substring(start, start + chunk.length));
+    start += chunk.length;
+
+    if (index !== chunks.length - 1) {
+      results.push(<mark key={`${chunk}${index}`}>{str.substring(start, start + query.length)}</mark>);
+      start += query.length;
+    }
+  });
+
+  return results;
+};
+
 function ItemComponent({ item }: { item: ItemInterface }) {
   const selectedItems = useAppSelector((state) => state.selectedItems.value);
+  const query = useAppSelector((state) => state.query.value);
+
   const dispatch = useAppDispatch();
 
   const isSelected = selectedItems.includes(item.id);
@@ -40,14 +67,14 @@ function ItemComponent({ item }: { item: ItemInterface }) {
         {loaded && <Item.Img src={item.avatar} alt={item.name} loading="lazy" srcSet={item.avatarSrcSet} />}
       </Item.ImgWrapper>
       <Item.Data>
-        <Item.Name>{item.name}</Item.Name>
-        <Item.Title>{item.title}</Item.Title>
-        <Item.Address>{item.address}, {item.city}</Item.Address>
-        <Item.Email>{item.email}</Item.Email>
+        <Item.Name>{getMarkedText(item.name, query)}</Item.Name>
+        <Item.Title>{getMarkedText(item.title, query)}</Item.Title>
+        <Item.Address>{getMarkedText(item.address, query)}, {getMarkedText(item.city, query)}</Item.Address>
+        <Item.Email>{getMarkedText(item.email, query)}</Item.Email>
         <Item.Splitter isSelected={isSelected} />
         <Item.Button onClick={buttonClick}>{buttonLabel}</Item.Button>
       </Item.Data>
     </Item.Root>);
 }
 
-export default ItemComponent;
+export default React.memo(ItemComponent);
