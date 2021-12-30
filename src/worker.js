@@ -5,7 +5,7 @@ let allItems = [];
 let prevQuery = "";
 let prevFilteredItems = [];
 
-function fetchItems(fn) {
+function fetchItems(data) {
   fetch(
     "https://gist.githubusercontent.com/allaud/093aa499998b7843bb10b44ea6ea02dc/raw/c400744999bf4b308f67807729a6635ced0c8644/users.json"
   )
@@ -37,16 +37,16 @@ function fetchItems(fn) {
         };
       });
 
-      postMessage([fn, { items: allItems }]);
+      postMessage({ ...data, results: allItems });
     });
 }
 
-function filterItems(fn, query) {
+function filterItems(data, query) {
   let searchItems;
   let searchQuery = query.toLowerCase();
 
   if (searchQuery === "") {
-    postMessage([fn, { query, items: allItems }]);
+    postMessage({ ...data, results: allItems });
     return;
   }
 
@@ -74,15 +74,15 @@ function filterItems(fn, query) {
   prevQuery = searchQuery;
   prevFilteredItems = items;
 
-  postMessage([fn, { query, items }]);
+  postMessage({ ...data, results: items });
 }
 
 onmessage = function (e) {
-  const [fn, args] = e.data;
+  const { fn } = e.data;
 
   if (fn === "fetchItems") {
-    fetchItems(fn, ...(args || []));
+    fetchItems(e.data, ...(e.data.data || []));
   } else if (fn === "searchItems") {
-    filterItems(fn, ...(args || []));
+    filterItems(e.data, ...(e.data.data || []));
   }
 };

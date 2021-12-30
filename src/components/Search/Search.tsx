@@ -1,35 +1,31 @@
 import { Search } from "components/components";
-import { useEffect } from "react";
 import { useAppSelector, useAppDispatch } from 'store/hooks';
-import { setQuery } from 'store/querySlice';
+import { actions, filterItemsThunk } from 'store/searchSlice';
+import { useRef } from 'react';
+import { SEARCH_DEBOUNCE_TIME } from 'components/constants';
 
 export default function SearchComponent() {
-  const query = useAppSelector((state) => state.query.value);
+  const query = useAppSelector((state) => state.search.query);
   const dispatch = useAppDispatch();
 
-  useEffect(() => {
-    const searchParams = new URLSearchParams(window.location.search);
+  const searchDebRef = useRef(0);
 
-    if (query) {
-      searchParams.set("q", query);
-    } else {
-      searchParams.delete('q');
-    }
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const query = e.target.value;
 
-    const params = searchParams.toString();
+    dispatch(actions.setQuery(query));
 
-    let newRelativePathQuery = window.location.pathname;
-    if (params) {
-      newRelativePathQuery += `?${params}`;
-    }
+    clearTimeout(searchDebRef.current);
 
-    window.history.pushState(null, '', newRelativePathQuery);
-  }, [query]);
+    searchDebRef.current = window.setTimeout(() => {
+      dispatch(filterItemsThunk(query));
+    }, SEARCH_DEBOUNCE_TIME);
+  };
 
   return (
     <Search.Root>
       <Search.Icon />
-      <Search.Input value={query} onChange={(e) => dispatch(setQuery(e.target.value))} />
+      <Search.Input value={query} onChange={onChange} />
     </Search.Root>
   )
 };

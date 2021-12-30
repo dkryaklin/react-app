@@ -1,9 +1,9 @@
 import { ItemInterface } from "components/types";
 import { Item } from 'components/components';
-import { CARD_SIZE } from "components/constants";
+import { CARD_SIZE, IMAGE_LOAD_DELAY_TIME } from "components/constants";
 import React, { useState, useEffect } from "react";
 import { useAppSelector, useAppDispatch } from 'store/hooks';
-import { selectItem, unselectItem } from 'store/selectedItemsSlice';
+import { actions } from 'store/searchSlice';
 
 function getMarkedText(str: string, query: string) {
   const lowerCaseStr = str.toLowerCase();
@@ -31,8 +31,8 @@ function getMarkedText(str: string, query: string) {
 };
 
 function ItemComponent({ item }: { item: ItemInterface }) {
-  const selectedItems = useAppSelector((state) => state.selectedItems.value);
-  const query = useAppSelector((state) => state.query.value);
+  const selectedItems = useAppSelector((state) => state.search.selectedItems);
+  const query = useAppSelector((state) => state.search.query);
 
   const dispatch = useAppDispatch();
 
@@ -46,7 +46,7 @@ function ItemComponent({ item }: { item: ItemInterface }) {
   useEffect(() => {
     const timeout = setTimeout(() => {
       setLoaded(true);
-    }, 100);
+    }, IMAGE_LOAD_DELAY_TIME);
 
     return (() => {
       clearTimeout(timeout);
@@ -55,9 +55,9 @@ function ItemComponent({ item }: { item: ItemInterface }) {
 
   function buttonClick() {
     if (isSelected) {
-      dispatch(unselectItem(item.id));
+      dispatch(actions.unselectItem(item.id));
     } else {
-      dispatch(selectItem(item.id));
+      dispatch(actions.selectItem(item.id));
     }
   };
 

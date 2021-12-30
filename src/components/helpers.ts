@@ -1,19 +1,42 @@
-import { ItemInterface } from "components/types";
 import { CARD_SIZE, RENDER_ITEMS_TRESHOLD } from "components/constants";
 
-export function getRenderItems(scrollEl: HTMLElement, items: ItemInterface[]) {
+export function getRenderItemsRange(scrollEl: HTMLElement) {
   const scrollHeight = scrollEl.offsetHeight;
   const itemsInViewport = Math.ceil(scrollHeight / CARD_SIZE.heightWithGap);
 
-  let itemsFrom =
+  let renderFrom =
     Math.floor(scrollEl.scrollTop / CARD_SIZE.heightWithGap) -
     RENDER_ITEMS_TRESHOLD;
 
-  if (itemsFrom < 0) {
-    itemsFrom = 0;
+  if (renderFrom < 0) {
+    renderFrom = 0;
   }
 
-  let itemsTo = itemsFrom + itemsInViewport + RENDER_ITEMS_TRESHOLD * 2 - 1;
+  let renderTo = renderFrom + itemsInViewport + RENDER_ITEMS_TRESHOLD * 2 - 1;
 
-  return items.slice(itemsFrom, itemsTo);
+  return { renderFrom, renderTo };
+}
+
+export function getQueryFromSearchParams() {
+  const searchParams = new URLSearchParams(window.location.search);
+  return searchParams.get("q") || "";
+}
+
+export function setQueryToSearchParams(query: string) {
+  const searchParams = new URLSearchParams(window.location.search);
+
+  if (query) {
+    searchParams.set("q", query);
+  } else {
+    searchParams.delete("q");
+  }
+
+  const params = searchParams.toString();
+
+  let newRelativePathQuery = window.location.pathname;
+  if (params) {
+    newRelativePathQuery += `?${params}`;
+  }
+
+  window.history.pushState(null, "", newRelativePathQuery);
 }
