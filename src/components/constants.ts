@@ -7,6 +7,12 @@ export const CARD_SIZE = {
 
 export const RENDER_ITEMS_TRESHOLD = 5;
 
+export const SEARCH_DEBOUNCE_TIME = 200;
+
+export const SEARCH_ITEMS_FN = "searchItems";
+
+export const FETCH_ITEMS_FN = "fetchItems";
+
 const size = {
   mobile: "560px",
 };
