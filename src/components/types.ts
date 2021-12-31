@@ -15,3 +15,8 @@ export interface TextChunk {
   key?: string;
   marked?: boolean;
 }
+
+export interface RenderItemsRange {
+  renderFrom: number;
+  renderTo: number;
+}

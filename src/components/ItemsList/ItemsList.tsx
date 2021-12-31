@@ -2,7 +2,7 @@ import { ItemsList } from 'components/components';
 import { CARD_SIZE } from 'components/constants';
 import { useAppSelector } from 'store/hooks';
 import ItemComponent from 'components/Item/Item';
-
+import React from 'react';
 
 function ItemsListComponent() {
   const items = useAppSelector((state) => state.search.items);
@@ -28,4 +28,4 @@ function ItemsListComponent() {
   );
 }
 
-export default ItemsListComponent;
+export default React.memo(ItemsListComponent);

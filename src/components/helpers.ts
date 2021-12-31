@@ -4,9 +4,9 @@ import {
   IMAGE_LOAD_DELAY_TIME,
 } from "components/constants";
 import { useEffect, useState, useDebugValue } from "react";
-import { TextChunk } from "components/types";
+import { RenderItemsRange, TextChunk } from "components/types";
 
-export function getRenderItemsRange(scrollEl: HTMLElement) {
+export function getRenderItemsRange(scrollEl: HTMLElement): RenderItemsRange {
   const scrollHeight = scrollEl.offsetHeight;
   const itemsInViewport = Math.ceil(scrollHeight / CARD_SIZE.heightWithGap);
 
