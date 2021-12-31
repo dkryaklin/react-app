@@ -108,7 +108,7 @@ export const Search = {
     padding: 0 20px 0 50px;
     border: none;
     outline: none;
-    background: #;
+    background: #fafafa;
     flex-grow: 1;
     box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.12), 0px 2px 2px rgba(0, 0, 0, 0.24);
     border-radius: 2px;
