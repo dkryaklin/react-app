@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { MutableRefObject, RefObject } from 'react';
 import { connect } from 'react-redux';
 import { App } from 'components/components';
 import { getRenderItemsRange } from 'components/helpers';
@@ -7,6 +7,7 @@ import ItemsListClassComponent from 'components/ItemsList/ItemsListClass';
 import { ItemInterface, RenderItemsRange } from 'components/types';
 import { AppDispatch, RootState } from 'store/store';
 import { actions, fetchItemsThunk } from 'store/searchSlice';
+import { AppContext } from 'context';
 
 interface AppProps {
   items: ItemInterface[],
@@ -55,13 +56,15 @@ class AppClassComponent extends React.Component<AppProps> {
     }
 
     return (
-      <App.Root>
-        <App.ScrollContainer ref={this.scrollRef} onScroll={() => this.onScroll()}>
-          <SearchClassComponent />
-          {content}
-        </App.ScrollContainer>
-        <App.ScrollLine />
-      </App.Root>
+      <AppContext.Provider value={{ scrollRef: this.scrollRef as MutableRefObject<HTMLDivElement> }}>
+        <App.Root>
+          <App.ScrollContainer ref={this.scrollRef} onScroll={() => this.onScroll()}>
+            <SearchClassComponent />
+            {content}
+          </App.ScrollContainer>
+          <App.ScrollLine />
+        </App.Root>
+      </AppContext.Provider>
     );
   }
 }

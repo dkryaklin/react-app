@@ -5,6 +5,7 @@ import SearchComponent from 'components/Search/Search';
 import ItemsListComponent from 'components/ItemsList/ItemsList';
 import { fetchItemsThunk, actions } from 'store/searchSlice';
 import { useAppSelector, useAppDispatch } from 'store/hooks';
+import { AppContext } from 'context';
 
 function AppComponent() {
   const items = useAppSelector((state) => state.search.items);
@@ -42,13 +43,15 @@ function AppComponent() {
   }
 
   return (
-    <App.Root>
-      <App.ScrollContainer ref={scrollRef} onScroll={onScroll}>
-        <SearchComponent />
-        {content}
-      </App.ScrollContainer>
-      <App.ScrollLine />
-    </App.Root>
+    <AppContext.Provider value={{ scrollRef: scrollRef }}>
+      <App.Root>
+        <App.ScrollContainer ref={scrollRef} onScroll={onScroll}>
+          <SearchComponent />
+          {content}
+        </App.ScrollContainer>
+        <App.ScrollLine />
+      </App.Root>
+    </AppContext.Provider>
   );
 }
 

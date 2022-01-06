@@ -6,6 +6,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { ItemInterface } from 'components/types';
 import { RootState, AppDispatch } from 'store/store';
+import { AppContext } from 'context';
 
 interface ItemProps {
   item: ItemInterface,
@@ -79,19 +80,22 @@ class ItemClassComponent extends React.Component<ItemProps, ItemState> {
     const top = CARD_SIZE.heightWithGap * item.position;
 
     return (
-      <Item.Root isSelected={isSelected} style={{ top: `${top}px` }}>
-        <Item.ImgWrapper>
-          {imageLoaded && <Item.Img src={item.avatar} alt={item.name} loading="lazy" srcSet={item.avatarSrcSet} />}
-        </Item.ImgWrapper>
-        <Item.Data>
-          <Item.Name>{getMarkedText(item.name, query)}</Item.Name>
-          <Item.Title>{getMarkedText(item.title, query)}</Item.Title>
-          <Item.Address>{getMarkedText(item.address, query)}, {getMarkedText(item.city, query)}</Item.Address>
-          <Item.Email>{getMarkedText(item.email, query)}</Item.Email>
-          <Item.Splitter isSelected={isSelected} />
-          <Item.Button onClick={() => this.buttonClick()}>{buttonLabel}</Item.Button>
-        </Item.Data>
-      </Item.Root >);
+      <AppContext.Consumer>
+        {value => <Item.Root isSelected={isSelected} style={{ top: `${top}px` }}>
+          <Item.ImgWrapper>
+            {imageLoaded && <Item.Img src={item.avatar} alt={item.name} loading="lazy" srcSet={item.avatarSrcSet} />}
+          </Item.ImgWrapper>
+          <Item.Data>
+            <Item.Name>{getMarkedText(item.name, query)}</Item.Name>
+            <Item.Title>{getMarkedText(item.title, query)}</Item.Title>
+            <Item.Address>{getMarkedText(item.address, query)}, {getMarkedText(item.city, query)}</Item.Address>
+            <Item.Email>{getMarkedText(item.email, query)}</Item.Email>
+            <Item.Splitter isSelected={isSelected} />
+            <Item.Button onClick={() => this.buttonClick()}>{buttonLabel}</Item.Button>
+          </Item.Data>
+        </Item.Root >}
+      </AppContext.Consumer>
+    );
   }
 }
 

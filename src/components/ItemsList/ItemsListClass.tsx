@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { RootState } from 'store/store';
 import { ItemInterface } from 'components/types';
 import React from 'react';
+import { AppContext } from 'context';
 
 interface ItemsListProps {
   items: ItemInterface[],
@@ -14,6 +15,8 @@ interface ItemsListProps {
 
 class ItemsListClassComponent extends React.Component<ItemsListProps> {
   render() {
+    // console.log(this.context);
+
     const { items, renderFrom, renderTo } = this.props;
 
     const listHeight = CARD_SIZE.heightWithGap * items.length;
@@ -34,6 +37,8 @@ class ItemsListClassComponent extends React.Component<ItemsListProps> {
     );
   }
 }
+
+ItemsListClassComponent.contextType = AppContext;
 
 const mapStateToProps = (state: RootState) => ({
   items: state.search.items,
